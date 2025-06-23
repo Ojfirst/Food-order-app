@@ -10,7 +10,7 @@ const CartButon = (props) => {
 			<span className={Classes.icon}>
         <CartIcon />
       </span>
-			<span>Cart</span>
+			<span>My Cart</span>
 			<span className={Classes.badge}>3</span>
 		</button>
 	);
