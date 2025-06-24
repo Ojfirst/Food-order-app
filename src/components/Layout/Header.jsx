@@ -9,12 +9,12 @@ const image = {
   name: 'A table full of delicious food'
 }
 
-const Header = () => {
+const Header = (props) => {
 	return (
 		<Fragment>
 			<header className={classes.header}>
-				<h1>Healthy Meal</h1>
-        <CartButon />
+				<h1>Lagos Cafe</h1>
+        <CartButon onClick={props.onShowCart} />
 			</header>
 			<div className={classes['main-image']}>
         <img src={image.content} alt={image.name} />
