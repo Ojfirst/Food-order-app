@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 
+import CartItem from './CartItem';
 import CartContext from '../../store/Cart-context';
 import Modal from '../UI/Modal';
 import classes from './Cart.module.css';
@@ -7,20 +8,21 @@ import classes from './Cart.module.css';
 const Cart = (props) => {
 	const cartCtx = useContext(CartContext);
 
-	const hasItems = cartCtx.items.length > 0;
+	const hasItems = cartCtx.items.length > 0; // Check if there are items in the cart
 
 	const totalAmount = `N${cartCtx.totalAmount.toFixed(2)}`;
 
+  const cartItemRemoveHandler = (id) => {
+    cartCtx.removeItem(id); // This function removes an item from the cart by its id
+  };
+  const cartItemAddHandler = (item) => {
+    cartCtx.addItem(item) // This function adds an item to the cart
+  };
+ 
 	const cartItems = (
 		<ul className={classes['cart-items']}>
 			{cartCtx.items.map((item) => (
-				<li key={item.id}>
-					<div>
-						<h3>{item.name}</h3>
-						<div>x {item.amount}</div>
-						<div>N{(item.price * item.amount).toFixed(2)}</div>
-					</div>
-				</li>
+				<CartItem key={item.id}  name={item.name} amount={item.amount} price={item.price} onRemove={cartItemRemoveHandler.bind(null, item.id)} onAdd={cartItemAddHandler.bind(null, item)}/> //
 			))}
 		</ul>
 	) || <p>No items in the cart.</p>;
