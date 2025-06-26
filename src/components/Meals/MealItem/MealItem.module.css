@@ -3,7 +3,14 @@
   justify-content: space-between;
   margin: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #fae5e5;
+}
+
+.meal img {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .meal h3 {
