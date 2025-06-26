@@ -12,7 +12,7 @@ const CartButon = (props) => {
   
   const numberOfCartItems = items.reduce((acc, item) => {return acc + item.amount}, 0);
 
-
+  // Add animation effect to cart on add items
   const btnClasess = `${classes.button} ${btnIsHighlighted ? classes.bump : ''}`;
 
   useEffect(() => {
@@ -20,9 +20,16 @@ const CartButon = (props) => {
       return;
     }
     setBtnIsHighlighted(true);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setBtnIsHighlighted(false);
     }, 300);
+    console.log('timer 1',timer)
+
+    // Cleaner function
+    return () => {
+      clearTimeout(timer)
+      console.log('timer 2',timer)
+    }
   }, [items]); 
 
 	return (
