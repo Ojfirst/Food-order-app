@@ -20,8 +20,6 @@ const AvailableMeals = () => {
 			}
 			const mealsData = await response.json();
 
-			console.log('This sis Data:', mealsData);
-
 			const loadMeals = [];
 
 			for (const key in mealsData) {
@@ -31,13 +29,10 @@ const AvailableMeals = () => {
 					description: mealsData[key].description,
 					price: mealsData[key].price,
 				});
-
-				console.log('This is load Meals:', loadMeals);
 				setMeals(loadMeals);
 			}
 		} catch (error) {
 			setError(error.message);
-			console.error('Error fetching meals:', error);
 		}
 		setIsloading(false);
 	};
