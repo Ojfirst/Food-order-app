@@ -7,24 +7,27 @@ const defaultCartState = {
 };
 
 const cartReducer = (state, action) => {
+	// This function is used to update the state of the cart based on the action type
+	// It takes the current state and an action as arguments and returns the new state
 	if (action.type === 'ADD') {
 		const updatedTotalAmount =
-			state.totalAmount + action.item.price * action.item.amount;
-
-		const existingCartItemIndex = state.items.findIndex(
+			state.totalAmount + action.item.price * action.item.amount; // Calculate the new total amount by adding the price of the item multiplied by its amount
+    // This is the total amount of all items in the cart
+		const existingCartItemIndex = state.items.findIndex( // Find the index of the item in the cart
+      // This checks if the item being added is already in the cart
 			(item) => item.id === action.item.id
 		); // Check if an item is already part of items
 
-		const getExcitingCartItem = state.items[existingCartItemIndex]; // Finds matching id
+		const getExcitingCartItem = state.items[existingCartItemIndex]; // Get the existing item from the cart using the index found above
 
 		let updatedItems;
 
-		if (getExcitingCartItem) {
-			const updatedItem = {
+		if (getExcitingCartItem) { // If the item already exists in the cart, we update its amount
+			const updatedItem = { // Create a new object with the updated amount
 				...getExcitingCartItem,
 				amount: getExcitingCartItem.amount + action.item.amount,
 			};
-			updatedItems = [ ...state.items ];
+			updatedItems = [...state.items];
 			updatedItems[existingCartItemIndex] = updatedItem;
 		} else {
 			updatedItems = state.items.concat(action.item); // Generate a brand new state with concat() method
@@ -36,34 +39,32 @@ const cartReducer = (state, action) => {
 		};
 	}
 
-  if (action.type === 'REMOVE') {
-    const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.id
+	if (action.type === 'REMOVE') {
+		const existingCartItemIndex = state.items.findIndex(
+			(item) => item.id === action.id
 		); // Check if an item is already part of items
-    const getExcitingCartItem = state.items[existingCartItemIndex];
-    const updateTotalAmount = state.totalAmount - getExcitingCartItem.price; 
+		const getExcitingCartItem = state.items[existingCartItemIndex];
+		const updateTotalAmount = state.totalAmount - getExcitingCartItem.price;
 
-    let updatedItems;
-    if (getExcitingCartItem.amount === 1) {
-      // If the amount is 1, remove the item from the cart
-      updatedItems = state.items.filter((item) => item.id !== action.id);
-    }
-      else {
-        // If the amount is more than 1, decrease the amount
-        const updatedItem = {
-          ...getExcitingCartItem,
-          amount: getExcitingCartItem.amount - 1, // Decrease the amount by 1
-        };
-        updatedItems = [ ...state.items ]; // Create a copy of the items array
-        updatedItems[existingCartItemIndex] = updatedItem; // Update the specific item
-      }
-      return {
-        items: updatedItems, // Update the items array
-        totalAmount: updateTotalAmount, // Update the total amount}
-      
-    }
-  }
-	return defaultCartState; //
+		let updatedItems;
+		if (getExcitingCartItem.amount === 1) {
+			// If the amount is 1, remove the item from the cart
+			updatedItems = state.items.filter((item) => item.id !== action.id);
+		} else {
+			// If the amount is more than 1, decrease the amount
+			const updatedItem = {
+				...getExcitingCartItem,
+				amount: getExcitingCartItem.amount - 1, // Decrease the amount by 1
+			};
+			updatedItems = [...state.items]; // Create a copy of the items array
+			updatedItems[existingCartItemIndex] = updatedItem; // Update the specific item
+		}
+		return {
+			items: updatedItems, // Update the items array
+			totalAmount: updateTotalAmount, // Update the total amount}
+		};
+	}
+	return defaultCartState; // Return the default state if no action matches
 };
 
 const CartProvider = (props) => {
