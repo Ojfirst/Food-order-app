@@ -67,14 +67,14 @@ const AvailableMeals = () => {
 	}
 	if (error) {
 		content = (
-			<section className={classes.mealsError}>
+			<section className={ `${classes.meals}  ${classes.mealsError}`}>
 				<p>{error}</p>
 			</section>
 		);
 	}
 	if (isloading) {
 		content = (
-			<section className={classes.mealsIsLoading}>
+			<section className={`${classes.mealsIsLoading}`}>
 				<p>Loading...</p>
 			</section>
 		);
