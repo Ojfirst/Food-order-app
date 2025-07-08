@@ -12,8 +12,9 @@ const inputStateReducer = (state, action) => {
 		return { isTouched: true, value: state.value };
 	}
 	if (action.type === 'RESET') {
-		return { value: '', isTouched: false };
+		return { isTouched: false, value: '' };
 	}
+  return initialInputState;
 };
 
 const useCheckout = (validateInput) => {
@@ -38,7 +39,7 @@ const useCheckout = (validateInput) => {
 	};
 
 	return {
-		value: inputState,
+		value: inputState.value,
 		isValid: inputIsValid,
 		inputChangeHandler,
 		inputBlurHandler,
