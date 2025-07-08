@@ -5,13 +5,15 @@ import classes from './AvailableMeal.module.css';
 
 const AvailableMeals = () => {
 	const [meals, setMeals] = useState([]);
+	const [isloading, setIsloading] = useState(true);
+	const [error, setError] = useState(null);
 
 	const fetchMeal = async () => {
+		setError(null);
 		try {
 			const response = await fetch(
 				'https://food-order-app-35b8f-default-rtdb.firebaseio.com/meal.json'
 			);
-			console.log('This is response', response);
 
 			if (!response.ok) {
 				throw new Error('Something went erong');
@@ -34,8 +36,10 @@ const AvailableMeals = () => {
 				setMeals(loadMeals);
 			}
 		} catch (error) {
+			setError(error.message);
 			console.error('Error fetching meals:', error);
 		}
+		setIsloading(false);
 	};
 
 	useEffect(() => {
@@ -53,39 +57,31 @@ const AvailableMeals = () => {
 		/>
 	));
 
+	let content;
+	if (meals.length > 0) {
+		content = (
+			<section className={classes.meals}>
+				<Card>{mealsList}</Card>
+			</section>
+		);
+	}
+	if (error) {
+		content = (
+			<section className={classes.mealsError}>
+				<p>{error}</p>
+			</section>
+		);
+	}
+	if (isloading) {
+		content = (
+			<section className={classes.mealsIsLoading}>
+				<p>Loading...</p>
+			</section>
+		);
+	}
+
 	return (
-		<section className={classes.meals}>
-			<Card>
-				<ul>{mealsList}</ul>
-			</Card>
-		</section>
+		<div>{content}</div>
 	);
 };
 export default AvailableMeals;
-
-// const DUMMY_MEALS = [
-// 	{
-// 		id: 'm1',
-// 		name: 'Rice',
-// 		description: 'spicy, savory, vibrant, and satisfying.',
-// 		price: 1850.99,
-// 	},
-// 	{
-// 		id: 'm2',
-// 		name: 'Cake Bread',
-// 		description: 'Soft, fluffy, and deliciously sweet',
-// 		price: 1320.5,
-// 	},
-// 	{
-// 		id: 'm3',
-// 		name: 'fried Chicken',
-// 		description: 'Crispy, juicy, and finger-licking good',
-// 		price: 2050.99,
-// 	},
-// 	{
-// 		id: 'm4',
-// 		name: 'Vegetable',
-// 		description: 'Fresh, colorful, and packed with nutrients',
-// 		price: 800.99,
-// 	},
-// ];
