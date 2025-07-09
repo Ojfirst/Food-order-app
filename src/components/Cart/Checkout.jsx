@@ -56,14 +56,14 @@ const Checkout = (props) => {
 			return;
 		}
 
-		const formData = {
+		const userData = {
 			name: enteredName,
-			street: enteredStreetName,
+			street: enteredStreetName, 
 			busStop: enteredBusStopName,
 			city: enteredCityName,
 		};
 
-		console.log('This is fornData', formData);
+		props.onAddUserData(userData);
 
 		resetName();
 		resetStreet();

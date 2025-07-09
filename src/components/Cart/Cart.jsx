@@ -7,6 +7,7 @@ import Checkout from './Checkout';
 import classes from './Cart.module.css';
 
 const Cart = (props) => {
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const cartCtx = useContext(CartContext);
 	const [isCheckout, setIsCheckout] = useState(false);
 
@@ -23,6 +24,29 @@ const Cart = (props) => {
 
 	const orderHandler = () => {
 		setIsCheckout(true);
+	};
+
+	const submitOrderHandler = async (userData) => {
+		setIsSubmitting(true);
+		try {
+			const response = await fetch(
+				'https://food-order-app-35b8f-default-rtdb.firebaseio.com/order.json',
+				{
+					method: 'POST',
+					header: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ user: userData, orderedItems: cartCtx.items }),
+				}
+			);
+			if (!response.ok) {
+				throw new Error('Something went wrong');
+			}
+
+			const data = await response.json();
+			console.log('Cart Data:', data);
+		} catch (err) {
+      isSubmitting(false);
+      throw new Error(err.message);
+		}
 	};
 
 	const cartItems = (
@@ -60,7 +84,9 @@ const Cart = (props) => {
 				<span>Total Amount</span>
 				<span>{totalAmount}</span>
 			</div>
-			{isCheckout && <Checkout onCancel={props.onClose}/>}
+			{isCheckout && (
+				<Checkout onAddUserData={submitOrderHandler} onCancel={props.onClose} />
+			)}
 			{!isCheckout && modalAction}
 		</Modal>
 	);
