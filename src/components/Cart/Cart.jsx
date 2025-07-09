@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 
 import CartItem from './CartItem';
 import CartContext from '../../store/Cart-context';
@@ -8,6 +8,9 @@ import classes from './Cart.module.css';
 
 const Cart = (props) => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [error, setError] = useState(null);
+	const [didSubmit, setDidSubmit] = useState(false);
+
 	const cartCtx = useContext(CartContext);
 	const [isCheckout, setIsCheckout] = useState(false);
 
@@ -27,6 +30,7 @@ const Cart = (props) => {
 	};
 
 	const submitOrderHandler = async (userData) => {
+		setError(null);
 		setIsSubmitting(true);
 		try {
 			const response = await fetch(
@@ -44,8 +48,11 @@ const Cart = (props) => {
 			const data = await response.json();
 			console.log('Cart Data:', data);
 		} catch (err) {
-      isSubmitting(false);
-      throw new Error(err.message);
+			setError(err.message);
+			throw new Error(err.message);
+		} finally {
+			setIsSubmitting(false);
+			setDidSubmit(true);
 		}
 	};
 
@@ -77,8 +84,8 @@ const Cart = (props) => {
 		</div>
 	);
 
-	return (
-		<Modal onClose={props.onClose}>
+	const cartModalContent = (
+		<React.Fragment>
 			{cartItems}
 			<div className={classes.total}>
 				<span>Total Amount</span>
@@ -88,6 +95,31 @@ const Cart = (props) => {
 				<Checkout onAddUserData={submitOrderHandler} onCancel={props.onClose} />
 			)}
 			{!isCheckout && modalAction}
+		</React.Fragment>
+	);
+
+	const isSubmittingModalContent = <p>Sending order data...</p>;
+
+	const didSubmitModalContent = (
+		<Fragment>
+			<p>Order successfully sent!</p>
+
+      <div className={classes.actions}>
+			<button className={classes.button} onClick={props.onClose}>
+				Cancel
+			</button>
+		</div>
+		</Fragment>
+	);
+
+	const errorModalContent = <p>{error}</p>;
+
+	return (
+		<Modal onClose={props.onClose}>
+			{!isSubmitting && !didSubmit && cartModalContent}
+			{isSubmitting && isSubmittingModalContent}
+			{isSubmitting && error && errorModalContent}
+			{!isSubmitting && didSubmit && didSubmitModalContent}
 		</Modal>
 	);
 };
