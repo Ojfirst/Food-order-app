@@ -12,9 +12,10 @@ const cartReducer = (state, action) => {
 	if (action.type === 'ADD') {
 		const updatedTotalAmount =
 			state.totalAmount + action.item.price * action.item.amount; // Calculate the new total amount by adding the price of the item multiplied by its amount
-    // This is the total amount of all items in the cart
-		const existingCartItemIndex = state.items.findIndex( // Find the index of the item in the cart
-      // This checks if the item being added is already in the cart
+		// This is the total amount of all items in the cart
+		const existingCartItemIndex = state.items.findIndex(
+			// Find the index of the item in the cart
+			// This checks if the item being added is already in the cart
 			(item) => item.id === action.item.id
 		); // Check if an item is already part of items
 
@@ -22,8 +23,10 @@ const cartReducer = (state, action) => {
 
 		let updatedItems;
 
-		if (getExcitingCartItem) { // If the item already exists in the cart, we update its amount
-			const updatedItem = { // Create a new object with the updated amount
+		if (getExcitingCartItem) {
+			// If the item already exists in the cart, we update its amount
+			const updatedItem = {
+				// Create a new object with the updated amount
 				...getExcitingCartItem,
 				amount: getExcitingCartItem.amount + action.item.amount,
 			};
@@ -64,6 +67,10 @@ const cartReducer = (state, action) => {
 			totalAmount: updateTotalAmount, // Update the total amount}
 		};
 	}
+
+  if (action.type === 'CLEAR') {
+    return defaultCartState;
+  }
 	return defaultCartState; // Return the default state if no action matches
 };
 
@@ -81,12 +88,17 @@ const CartProvider = (props) => {
 		dispatchCartAction({ type: 'REMOVE', id: id });
 	};
 
+	const clearCartHandler = () => {
+		dispatchCartAction({ type: 'CLEAR' });
+	};
+
 	// cartState use in constructing this object
 	const cartContext = {
 		items: cartState.items,
 		totalAmount: cartState.totalAmount,
 		addItem: addItemToCartHandler, // Point add function
 		removeItem: removeItemFromHandler, // point to remove function
+		clearCart: clearCartHandler, // point to clearCartunction
 	};
 
 	return (

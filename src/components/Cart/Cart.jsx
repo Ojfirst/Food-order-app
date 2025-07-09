@@ -53,6 +53,7 @@ const Cart = (props) => {
 		} finally {
 			setIsSubmitting(false);
 			setDidSubmit(true);
+      cartCtx.clearCart();
 		}
 	};
 
@@ -104,15 +105,24 @@ const Cart = (props) => {
 		<Fragment>
 			<p>Order successfully sent!</p>
 
-      <div className={classes.actions}>
-			<button className={classes.button} onClick={props.onClose}>
-				Cancel
-			</button>
-		</div>
+			<div className={classes.actions}>
+				<button className={classes.button} onClick={props.onClose}>
+					Cancel
+				</button>
+			</div>
 		</Fragment>
 	);
 
-	const errorModalContent = <p>{error}</p>;
+	const errorModalContent = (
+		<Fragment>
+			<div className={classes.actions}>
+				<p>{error}</p>
+				<button className={classes.button} onClick={props.onClose}>
+					Cancel
+				</button>
+			</div>
+		</Fragment>
+	);
 
 	return (
 		<Modal onClose={props.onClose}>
